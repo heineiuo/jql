@@ -1,0 +1,31 @@
+{
+  "devPublicPath": "./",
+  "babel-loader": "babel-loader?-babelrc,+cacheDirectory,presets[]=es2015,presets[]=stage-0",
+  "modulesNeedBabel": [
+  ],
+  "port": 8081,
+  "externals": [
+  ],
+  "ignorePackages": [
+  ],
+  "packages": [
+    {
+      "name": "@jql/client",
+      "outputDir": "./packages/client",
+      "version": "0.0.1",
+      "main": "index.js",
+      "devEntry": "./packages/client/src/index.js",
+      "externals": [
+      ]
+    },
+    {
+      "name": "@jql/server",
+      "outputDir": "./packages/server",
+      "version": "0.0.1",
+      "main": "index.js",
+      "platform": "node",
+      "babel-loader": "babel-loader",
+      "devEntry": "./packages/server/src/index.js"
+    }
+  ]
+}

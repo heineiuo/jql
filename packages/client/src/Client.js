@@ -2,6 +2,9 @@ import fetch from 'isomorphic-fetch'
 
 class Client {
   constructor(options){
+    options = Object.assign({
+      beforeFetch: this.beforeFetch
+    }, options)
     this.url = options.url
     this.beforeFetch = options.beforeFetch
   }
@@ -16,9 +19,14 @@ class Client {
     try {
       const fnText = `(${String(fn)})`
       const fetchOptions = await this.beforeFetch({
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({__fn: fnText})
       })
       const res = await fetch(this.url, fetchOptions)
+      resolve(res)
     } catch(e){
       reject(e)
     }

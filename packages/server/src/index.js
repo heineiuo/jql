@@ -1,1 +1,5 @@
-import Query from 'query'
+import Query from './Query'
+
+export {
+  Query
+}
