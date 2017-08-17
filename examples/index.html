@@ -7,27 +7,26 @@
 	<title></title>
 </head>
 <body>
-	<div id="app">
-		<textarea name="" id="text" cols="30" rows="10">
-function(db){
-	return new Promise((resolve, reject) => {
-		setTimeout(() => {
-			resolve({hello: 'world'})
-		}, 1)
-	})
-}
-		
-		</textarea>
-		<div><button id="btn">RUN!</button></div>
-		<pre id=pre></pre>
+	<div id="app" style="display: flex">
+		<div id="monaco" style="width:600px;height:800px;border:1px solid grey"></div>
+		<div style="flex: 1">
+			<div>
+				<button id="btn">RUN!</button>
+			</div>
+			<div id="result"><pre></pre></div>
+		</div>
 	</div>
 
+	
 	<script src="https://unpkg.com/babel-polyfill@6.23.0/dist/polyfill.min.js"></script>
 	<script src="http://127.0.0.1:8081/@jql/client/index.js"></script>
+	<script src="https://unpkg.com/monaco-editor@0.9.0/min/vs/loader.js"></script>
 	<script>
 
-const $ = (selector) => {
-	const d = document.querySelector(selector)
+const $ = (d) => {
+	if (!(d instanceof HTMLElement)){
+		d = document.querySelector(d)
+	}
 	if (!!d) {
 		d.on = d.addEventListener
 		d.off = d.removeEventListener
@@ -41,17 +40,42 @@ const client = new Client({
 	url: 'http://127.0.0.1:8080/jql'
 })
 
+let editor = null
+
+
+
+
 $('#btn').on('click', async () => {
-	const fn = $('#text')
-	const t = Date.now()
-	const res = await client.exec(fn.value)
-	const text = await res.text()
-	$('#pre').html(`
-Spend: ${Date.now() - t}ms
-=======
-Result: ${text}
-	`)
+	if (!editor) return alert('Please wait editor initing')
+		const t = Date.now()
+		const res = await client.exec(editor.getValue())
+		const text = await res.text()
+		const pre = document.createElement('pre')
+		pre.style.borderBottom = '1px solid #CCC'
+		$(pre).html(`
+	Spend: ${Date.now() - t}ms
+	=======
+	Result: ${text}
+		`)
+		$('#result').insertBefore(pre, $('#result').firstChild)
+	})
+
+require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.9.0/min/vs' }});
+require(['vs/editor/editor.main'], function() {
+	editor = monaco.editor.create(document.getElementById('monaco'), {
+		value: [
+`function example(db){
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			resolve({hello: 'world'})
+		}, 1)
+	})
+}`
+		].join('\n'),
+		language: 'javascript'
+	})
 })
+
 
 	</script>
 	
