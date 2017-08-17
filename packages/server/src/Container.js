@@ -4,6 +4,8 @@ import isPlainObject from 'lodash/isplainObject'
 import defaults from 'lodash/defaults'
 import Store from './Store'
 
+const acorn = require('acorn')
+
 const injectModule = function (moduleName) {
   return {}
 }
@@ -12,6 +14,7 @@ class Container extends EventEmitter {
   constructor(options){
     super()
     defaults(options, {
+      timeout: 30000,
       injectModule: injectModule.bind(this)
     })
 
@@ -35,12 +38,23 @@ class Container extends EventEmitter {
 
   exec = (ql, options) => new Promise(async(resolve, reject) => {
     try {
+      const { body } = acorn.parse(ql.__fn, {
+        ecmaVersion: 8,
+        sourceType: 'script',
+        onToken: (token) => {
+          if (token.type.label === 'while') {
+            throw SyntaxError('while is disabled')
+          }
+        }
+      })
       resolve(
         await vm.runInContext(ql.__fn, this._env, {
-          displayErrors: true
+          displayErrors: false,
+          timeout: options.timeout
         })(new Store(options))
       )
     } catch(e){
+      e.name = `JQL::${e.name}`
       reject(e)
     }
   })
