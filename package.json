@@ -15,7 +15,9 @@
     "express": "^4.15.4",
     "isomorphic-fetch": "^2.2.1",
     "lolla": "^0.4.1",
-    "morgan": "^1.8.2"
+    "morgan": "^1.8.2",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0"
   },
   "devDependencies": {},
   "scripts": {
