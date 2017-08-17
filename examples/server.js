@@ -10,7 +10,11 @@ app.use(bodyParser.json())
 
 
 app.use('/jql', expressJQL({
-
+  actions: {
+    getTime: () => (dispatch, getState) => new Promise(resolve => {
+      resolve(new Date())
+    }) 
+  }
 }))
 
 app.use(express.static(__dirname))

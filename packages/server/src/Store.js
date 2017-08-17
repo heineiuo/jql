@@ -1,24 +1,22 @@
 import {createStore, applyMiddleware, combineReducers, bindActionCreators} from 'redux'
 import thunkMiddleware from 'redux-thunk'
-import { match, when } from 'match-when'
 import defaults from 'lodash/defaults'
+import requestReducer, { setRequest } from './request'
+import responseReducer, { setResponse } from './response'
 
 const loggerMiddleware = store => next => action => {
   if (process.env.NODE_ENV !== 'production') console.warn(action)
   return next(action)
 }
 
-const jqlReducer = (state={}, action) => match(action.type, {
-  [when()]: state
-})
 
-class Context {
+class Store {
   constructor(args){
-    const { reducers={}, actions={}, initialState={}, request, response, middleware={} } = args
+    const { reducers={}, actions={}, defaultState={}, request, params={}, response, middleware={} } = args
     
     defaults(middleware, {
       thunkMiddleware,
-      loggerMiddleware
+      // loggerMiddleware
     })
 
     const middlewareArray = Object.values(middleware)
@@ -27,17 +25,23 @@ class Context {
 
     const store = createStoreWithMiddleware(combineReducers({
       ...reducers,
-      jql: jqlReducer
-    }), initialState)
+      request: requestReducer,
+      response: responseReducer
+    }), defaultState)
 
-    const actionCreators = bindActionCreators(actions, store.dispatch)
+    store.dispatch(setRequest(request))
+    store.dispatch(setResponse(response))
 
-    this.dispatch = (...args) => store.dispatch(...args)
+    // this.dispatch = (...args) => store.dispatch(...args)
+
     this.getState = () => {
       return Object.assign({}, store.getState())
     }
-    this.actions = actionCreators
+
+    this.params = params
+
+    this.actions = bindActionCreators(actions, store.dispatch)
   }
 }
 
-export default Context
+export default Store
