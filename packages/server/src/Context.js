@@ -34,7 +34,7 @@ class Context {
 
     this.dispatch = (...args) => store.dispatch(...args)
     this.getState = () => {
-      return store.getState()
+      return Object.assign({}, store.getState())
     }
     this.actions = actionCreators
   }

@@ -7,7 +7,7 @@ const injectModule = function (moduleName) {
   return {}
 }
 
-class Query extends EventEmitter {
+class Container extends EventEmitter {
   constructor(options){
     super()
     options = Object.assign({
@@ -59,7 +59,7 @@ class Query extends EventEmitter {
       require: this.require
     }
     mockGlobal.global = mockGlobal
-    this._vmcontext = vm.createContext(mockGlobal)
+    this._env = vm.createContext(mockGlobal)
   }
 
   __require_cache = {}
@@ -79,7 +79,7 @@ class Query extends EventEmitter {
     
     try {
       this.script = new vm.Script(ql.__fn)
-      const proc = this.script.runInContext(this._vmcontext, {
+      const proc = this.script.runInContext(this._env, {
         displayErrors: false
       })
       const db = new Context(options)
@@ -91,4 +91,4 @@ class Query extends EventEmitter {
   })
 }
 
-export default Query
+export default Container

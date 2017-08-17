@@ -1,7 +1,7 @@
-import Query from './Query'
+import Container from './Container'
 import expressJQL from './expressJQL'
 
 export {
-  Query,
+  Container,
   expressJQL
 }

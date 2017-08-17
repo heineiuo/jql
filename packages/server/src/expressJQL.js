@@ -1,14 +1,14 @@
-import Query from './Query'
+import Container from './Container'
 
 export default (options) => {
 
-  const query = new Query({
+  const container = new Query({
     
   })
 
   return async (req, res, next) => {
     try {
-      const queryOptions = { 
+      const ctxOptions = { 
         reducers: options.reducers,
         actions: options.actions,
         middleware: options.middleware,
@@ -16,9 +16,8 @@ export default (options) => {
         response: res 
       }
       const {__fn} = req.body
-      const result = await query.exec({__fn}, queryOptions)
+      const result = await container.exec({__fn}, ctxOptions)
       res.json(result)
-  
     } catch(e){
       next(e)
     }
