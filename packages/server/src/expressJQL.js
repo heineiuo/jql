@@ -1,7 +1,7 @@
 import Container from './Container'
 import defaults from 'lodash/defaults'
 
-export default (args) => {
+export default (args={}) => {
 
   defaults(args, {
     getDefaultState: _getDefaultState

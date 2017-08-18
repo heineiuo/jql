@@ -43,7 +43,7 @@ class Container extends EventEmitter {
         sourceType: 'script',
         onToken: (token) => {
           if (token.type.label === 'while') {
-            throw SyntaxError('while is disabled')
+            throw new SyntaxError('while is disabled')
           }
         }
       })
