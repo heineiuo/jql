@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title></title>
+</head>
+<body>
+	<div id="app" style="display: flex">
+		<div>
+			<h3>函数：</h3>
+			<div id="monaco" style="width:600px;height:300px;border:1px solid grey"></div>
+			<h3>参数：</h3>
+			<div id="monaco2" style="width:600px;height:200px;border:1px solid grey"></div>
+		</div>
+		<div style="flex: 1">
+			<h3>结果：</h3>
+			<div>
+				<button id="btn">RUN!</button>
+			</div>
+			<div id="result"><pre></pre></div>
+		</div>
+	</div>
+
+	
+	<script src="https://unpkg.com/babel-polyfill@6.23.0/dist/polyfill.min.js"></script>
+	<script src="http://127.0.0.1:8081/@jql/client/index.js"></script>
+	<script src="https://unpkg.com/monaco-editor@0.9.0/min/vs/loader.js"></script>
+	<script>
+
+const $ = (d) => {
+	if (!(d instanceof HTMLElement)){
+		d = document.querySelector(d)
+	}
+	if (!!d) {
+		d.on = d.addEventListener
+		d.off = d.removeEventListener
+		d.html = html => d.innerHTML = html
+	}
+	return d
+}
+
+const {Client} = window['@jql/client']
+const client = new Client({
+	url: 'http://127.0.0.1:8080/jql'
+})
+
+let editor = null
+let editor2 = null
+
+
+
+
+$('#btn').on('click', async () => {
+	if (!editor) return alert('Please wait editor initing')
+	client.setParams(JSON.parse(editor2.getValue()))
+	const t = Date.now()
+	const res = await client.exec(editor.getValue())
+	const text = await res.text()
+	const pre = document.createElement('pre')
+	pre.style.borderBottom = '1px solid #CCC'
+	$(pre).html(`
+Spend: ${Date.now() - t}ms
+=======
+Result: ${text}
+	`)
+	$('#result').insertBefore(pre, $('#result').firstChild)
+})
+
+require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.9.0/min/vs' }});
+require(['vs/editor/editor.main'], function() {
+	editor = monaco.editor.create(document.getElementById('monaco'), {
+		value: [
+// 输入函数
+`async function example(db){
+	return {
+		hello: 'world', 
+		comment: db.params.comment, 
+		time: await db.actions.getTime()
+	}
+}`
+		].join('\n'),
+		language: 'javascript'
+	})
+
+	editor2 = monaco.editor.create(document.getElementById('monaco2'), {
+		value: [
+`{
+	"comment": "输入参数（json格式）"
+}`
+		].join('\n'),
+		language: 'json'
+	})
+})
+
+
+	</script>
+	
+</body>
+</html>

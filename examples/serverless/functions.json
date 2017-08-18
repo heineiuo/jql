@@ -1,0 +1,1 @@
+{"notExistFunc":"function a(){\n\t\t\treturn () => 'haha, im exists now'\n\t\t}"}

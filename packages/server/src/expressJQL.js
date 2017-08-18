@@ -13,7 +13,7 @@ export default (args={}) => {
 
   const { getDefaultState } = args
 
-  return async (req, res, next) => {
+  const middleware = async (req, res, next) => {
     try {
       const defaultState = await getDefaultState(req, res)
       const {__fn, __params} = req.body
@@ -31,6 +31,15 @@ export default (args={}) => {
     } catch(e){
       next(e)
     }
+  }
+
+  const injectActions = (actions) => {
+    args.actions = actions
+  }
+
+  return {
+    middleware,
+    injectActions
   }
 }
 
