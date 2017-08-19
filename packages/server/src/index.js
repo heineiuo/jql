@@ -1,7 +1,11 @@
 import Container from './Container'
 import expressJQL from './expressJQL'
+import loadFunctionsFromJSON from './loadFunctionsFromJSON'
+import Functions from './Functions'
 
 export {
   Container,
-  expressJQL
+  Functions,
+  expressJQL,
+  loadFunctionsFromJSON
 }

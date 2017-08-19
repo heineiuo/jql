@@ -1,2 +1,4 @@
 node_modules
 .jql
+packages/**/*.js
+!packages/*/src/**/*.js
