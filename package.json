@@ -23,6 +23,7 @@
   "devDependencies": {},
   "scripts": {
     "dev": "lolla",
+    "build": "lolla build --compress --production",
     "example-server": "babel-node examples/simple/server",
     "example-serverless": "babel-node examples/serverless/server",
     "test": "echo \"Error: no test specified\" && exit 1"
