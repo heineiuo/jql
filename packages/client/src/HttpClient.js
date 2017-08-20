@@ -15,7 +15,7 @@ class Client {
     this.url = url
   }
 
-  exec = (fn, args) => new Promise(async (resolve, reject) => {
+  query = (fn, args) => new Promise(async (resolve, reject) => {
     try {
       const fnText = `(${String(fn)})`
       const fetchOptions = await this.beforeFetch({
