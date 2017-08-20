@@ -1,9 +1,13 @@
 {
-  "name": "@jql/server",
-  "version": "0.0.1",
-  "description": "JQL is an execution engine use javascript as query language, tied to node.js backend service",
-  "main": "index.js",
-  "keywords": ["query language", "sandbox", "redux"],
-  "author": "@heineiuo",
-  "license": "MIT"
+	"name": "@jql/server",
+	"version": "0.0.1",
+	"description": "JQL is an execution engine use javascript as query language, tied to node.js backend service",
+	"main": "index.js",
+	"keywords": [
+		"query language",
+		"sandbox",
+		"redux"
+	],
+	"author": "@heineiuo",
+	"license": "MIT"
 }

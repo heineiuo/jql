@@ -1,5 +1,5 @@
-import Client from './Client'
+import HttpClient from './HttpClient'
 
 export {
-  Client
+  HttpClient
 }

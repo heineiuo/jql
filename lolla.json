@@ -12,7 +12,7 @@
     {
       "name": "@jql/client",
       "outputDir": "./packages/client",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "main": "index.js",
       "devEntry": "./packages/client/src/index.js",
       "externals": [
