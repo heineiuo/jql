@@ -5,7 +5,6 @@ class Client {
     options = Object.assign({
       beforeFetch: this.beforeFetch
     }, options)
-    this.params = options.params || {}
     this.url = options.url
     this.beforeFetch = options.beforeFetch
   }
@@ -16,11 +15,6 @@ class Client {
     this.url = url
   }
 
-  setParams = (params) => {
-    Object.assign(this.params, params)
-    return this
-  }
-
   exec = (fn, args) => new Promise(async (resolve, reject) => {
     try {
       const fnText = `(${String(fn)})`
@@ -29,7 +23,7 @@ class Client {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({__fn: fnText, __params: this.params})
+        body: JSON.stringify({__fn: fnText, __params: args})
       })
       const res = await fetch(this.url, fetchOptions)
       resolve(res)
