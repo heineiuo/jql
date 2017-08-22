@@ -41,8 +41,8 @@ const $ = (d) => {
 	return d
 }
 
-const {Client} = window['@jql/client']
-const client = new Client({
+const {HttpClient} = window['@jql/client']
+const client = new HttpClient({
 	url: 'http://127.0.0.1:8080/jql'
 })
 
@@ -54,9 +54,8 @@ let editor2 = null
 
 $('#btn').on('click', async () => {
 	if (!editor) return alert('Please wait editor initing')
-	client.setParams(JSON.parse(editor2.getValue()))
 	const t = Date.now()
-	const res = await client.exec(editor.getValue())
+	const res = await client.query(editor.getValue(), JSON.parse(editor2.getValue()))
 	const text = await res.text()
 	const pre = document.createElement('pre')
 	pre.style.borderBottom = '1px solid #CCC'
