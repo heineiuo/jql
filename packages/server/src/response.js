@@ -11,6 +11,6 @@ export default (state=defaultState, action) => match(action.type, {
 })
 
 export const setResponse = response => ({
-  type: '@@request/RESPONSE_SET',
+  type: '@@response/RESPONSE_SET',
   payload: response
 })

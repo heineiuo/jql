@@ -1,29 +1,23 @@
 import vm from 'vm'
 import EventEmitter from 'events'
-import isPlainObject from 'lodash/isplainObject'
+import isPlainObject from 'lodash/isPlainObject'
 import defaults from 'lodash/defaults'
 import Store from './Store'
+import env from './env'
 
 const acorn = require('acorn')
+// require('acorn-es7-plugin')(acorn)
 
 const injectModule = function (moduleName) {
   return {}
 }
 
 class Container extends EventEmitter {
-  constructor(options){
+  constructor(options) {
     super()
     defaults(options, {
       timeout: 30000,
       injectModule: injectModule.bind(this)
-    })
-
-    /**
-     * setTimtout, setInterval, setImmediate, process.nextTick, Promise is forbidden
-     * because it callback may throw error in container environment
-     */
-    this._env = vm.createContext({
-      Promise: () => { throw new SyntaxError('Promise is disabled in JQL. But async/await is allowed') }
     })
   }
 
@@ -36,7 +30,7 @@ class Container extends EventEmitter {
     return this.__require_cache[moduleName]
   }
 
-  exec = (ql, options) => new Promise(async(resolve, reject) => {
+  exec = (ql, options) => new Promise(async (resolve, reject) => {
     try {
       const { body } = acorn.parse(ql.__fn, {
         ecmaVersion: 8,
@@ -47,13 +41,15 @@ class Container extends EventEmitter {
           }
         }
       })
+      const script = new vm.Script(ql.__fn)
+      const db = new Store(options)
       resolve(
-        await vm.runInContext(ql.__fn, this._env, {
-          displayErrors: false,
+        await script.runInContext(env, {
+          displayErrors: true,
           timeout: options.timeout
-        })(new Store(options))
+        })(db)
       )
-    } catch(e){
+    } catch (e) {
       e.name = `JQL::${e.name}`
       reject(e)
     }

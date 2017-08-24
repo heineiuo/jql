@@ -1,16 +1,11 @@
 import vm from 'vm'
+import env from './env'
 
 class Functions {
-  constructor () {
-
-    /**
-     * setTimtout, setInterval, setImmediate, process.nextTick, Promise is forbidden
-     * because it callback may throw error in container environment
-     */
-    this._env = vm.createContext({
-      Promise: () => { throw new SyntaxError('Promise is disabled in JQL. But async/await is allowed') }
-    })
-
+  constructor(options) {
+    if (options.internalFunctions) {
+      this.loadInternalFunctions(options.internalFunctions)
+    }
   }
 
   maps = {
@@ -18,7 +13,23 @@ class Functions {
   }
 
   put = (key, value) => {
-    this.maps[key] = vm.runInContext(`(${String(value)})`, this._env)
+    this.maps[key] = value
+  }
+
+  del = (key) => {
+    delete this.maps[key]
+  }
+
+  loadInternalFunctions = (obj) => {
+    Object.keys(obj).forEach(key => {
+      this.put(key, obj[key])
+    })
+  }
+
+  loadExternalFunctions = (obj) => {
+    Object.keys(obj).forEach(key => {
+      this.put(key, vm.runInContext(`(${String(obj[key])})`, env))
+    })
   }
 
   all = () => {

@@ -1,14 +1,14 @@
 import Container from './Container'
 import defaults from 'lodash/defaults'
 
-export default (args={}) => {
+export default (args = {}) => {
 
   defaults(args, {
     getDefaultState: _getDefaultState
   })
 
   const container = new Container({
-    
+
   })
 
   const { getDefaultState } = args
@@ -16,19 +16,19 @@ export default (args={}) => {
   const middleware = async (req, res, next) => {
     try {
       const defaultState = await getDefaultState(req, res)
-      const {__fn, __params} = req.body
+      const { __fn, __params } = req.body
       const ctxOptions = {
         reducers: args.reducers,
         actions: args.actions,
         middleware: args.middleware,
-        request: req, 
+        request: req,
         defaultState,
         params: __params,
-        response: res 
+        response: res
       }
-      const result = await container.exec({__fn}, ctxOptions)
+      const result = await container.exec({ __fn }, ctxOptions)
       res.json(result)
-    } catch(e){
+    } catch (e) {
       next(e)
     }
   }

@@ -1,6 +1,6 @@
 {
 	"name": "@jql/server",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "JQL is an execution engine use javascript as query language, tied to node.js backend service",
 	"main": "index.js",
 	"keywords": [
@@ -8,6 +8,12 @@
 		"sandbox",
 		"redux"
 	],
+	"dependencies": {
+    "acorn": "^5.1.1",
+    "isomorphic-fetch": "^2.2.1",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0"
+  },
 	"author": "@heineiuo",
 	"license": "MIT"
 }
